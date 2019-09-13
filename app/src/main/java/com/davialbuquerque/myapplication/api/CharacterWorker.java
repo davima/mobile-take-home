@@ -1,6 +1,8 @@
 package com.davialbuquerque.myapplication.api;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,8 +15,11 @@ import com.davialbuquerque.myapplication.model.EpisodeResponse;
 
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URL;
+
 public class CharacterWorker extends Worker {
-    private static final String DEAD_IDS = "DEAD_IDS";
+    public static final String DEAD_IDS = "DEAD_IDS";
 
     public CharacterWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -23,9 +28,20 @@ public class CharacterWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        String[] characterUrls = getInputData().getStringArray(CharacterRepo.CHAR_URLS);
+        String imageUrl = getInputData().getString(CharacterRepo.IMAGE_URL);
+        if (characterUrls != null) {
+            loadCharacters(characterUrls);
+        } else if (imageUrl != null){
+            loadImage(imageUrl);
+        }
+        return Result.success();
+    }
+
+    private void loadCharacters(String[] urls) {
         CharacterRepo.backedCharacters.clear();
         CharacterRepo.status.postValue(CharacterRepo.LOADING);
-        String[] urls = getInputData().getStringArray(CharacterRepo.CHAR_URLS);
+
         if (urls != null) {
             for (String url : urls) {
                 JSONObject json = ConnectionHelper.loadJson(url);
@@ -42,6 +58,19 @@ public class CharacterWorker extends Worker {
                 }
             }
         }
-        return Result.success();
+    }
+
+    private void loadImage(String url) {
+        Bitmap bmp = null;
+        InputStream inputStream = null;
+        try {
+            inputStream = new URL(url).openStream();
+            bmp = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+
+            CharacterRepo.characterImage.postValue(bmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

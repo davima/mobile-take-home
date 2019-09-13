@@ -10,4 +10,9 @@
     <string name="dead">Gone</string>
     <string name="kill">KILL</string>
     <string name="close">CLOSE</string>
+    <string name="id">ID: %d</string>
+    <string name="name">Name: %s</string>
+    <string name="status">Status: %s</string>
+    <string name="species">Species: %s</string>
+    <string name="gender">Gender: %s</string>
 </resources>

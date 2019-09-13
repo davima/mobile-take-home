@@ -35,7 +35,11 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     @Override
     public void onCharacterClick(Character character) {
-
+        CharacterDetailDialog dialog = new CharacterDetailDialog();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CharacterDetailDialog.CHARACTER, character);
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), null);
     }
 
 
