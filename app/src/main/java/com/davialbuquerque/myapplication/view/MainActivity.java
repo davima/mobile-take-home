@@ -2,18 +2,14 @@ package com.davialbuquerque.myapplication.view;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import android.view.View;
-
 import com.davialbuquerque.myapplication.R;
+import com.davialbuquerque.myapplication.model.Character;
+import com.davialbuquerque.myapplication.model.Episode;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +24,19 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_layout, fragment).commitAllowingStateLoss();
     }
 
+    @Override
+    public void onEpisodeClick(Episode episode) {
+        Fragment fragment = new EpisodeDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EpisodeDetailFragment.EPISODE, episode);
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().addToBackStack(episode.getName()).add(R.id.fragment_layout, fragment, EpisodeDetailFragment.TAG).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onCharacterClick(Character character) {
+
+    }
 
 
 }

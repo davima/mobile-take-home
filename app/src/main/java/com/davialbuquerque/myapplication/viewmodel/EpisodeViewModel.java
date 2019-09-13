@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel;
 import com.davialbuquerque.myapplication.api.EpisodeRepo;
 import com.davialbuquerque.myapplication.model.Episode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EpisodeViewModel extends ViewModel {

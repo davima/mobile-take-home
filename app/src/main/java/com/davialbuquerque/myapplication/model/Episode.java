@@ -3,10 +3,11 @@ package com.davialbuquerque.myapplication.model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Episode {
+public class Episode implements Serializable {
     private Long id;
     private String name;
     private String airDate;

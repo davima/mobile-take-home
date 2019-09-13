@@ -3,7 +3,6 @@ package com.davialbuquerque.myapplication.view;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 import com.davialbuquerque.myapplication.R;
 import com.davialbuquerque.myapplication.api.EpisodeRepo;
 import com.davialbuquerque.myapplication.model.Episode;
-import com.davialbuquerque.myapplication.viewmodel.EpisodeViewModel;
+import com.davialbuquerque.myapplication.viewmodel.RickAndMorTyViewModel;
 
 import java.util.List;
 
@@ -28,7 +27,8 @@ import java.util.List;
  */
 public class EpisodesFragment extends Fragment {
 
-    private EpisodeViewModel viewModel;
+//    private EpisodeViewModel viewModel;
+    private RickAndMorTyViewModel<Episode> viewModel;
     private RecyclerView recyclerView;
     private ListAdapter adapter;
     private SwipeRefreshLayout swipe;
@@ -43,9 +43,10 @@ public class EpisodesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_episodes, container, false);
-        viewModel = ViewModelProviders.of(this).get(EpisodeViewModel.class);
-        viewModel.init();
-        viewModel.getEpisodes().observe(this, new Observer<List<Episode>>() {
+//        viewModel = ViewModelProviders.of(this).get(EpisodeViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(RickAndMorTyViewModel.class);
+        viewModel.init(EpisodeRepo.getAllEpisodes(), EpisodeRepo.getStatus());
+        viewModel.getData().observe(this, new Observer<List<Episode>>() {
             @Override
             public void onChanged(List<Episode> episodes) {
                 ((EpisodeAdapter)adapter).setData(episodes);
@@ -71,6 +72,7 @@ public class EpisodesFragment extends Fragment {
 
         recyclerView = v.findViewById(R.id.recyclerView);
         adapter = new EpisodeAdapter();
+        ((EpisodeAdapter)adapter).setEpisodeClickListener((MainActivity)getActivity());
         recyclerView.setAdapter(adapter);
 
         return v;

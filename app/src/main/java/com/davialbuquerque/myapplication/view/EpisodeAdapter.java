@@ -15,11 +15,11 @@ import com.davialbuquerque.myapplication.model.Episode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class EpisodeAdapter extends ListAdapter<Episode, RecyclerView.ViewHolder> {
 
-    List<Episode> episodes = new ArrayList<>();
+    private List<Episode> episodes = new ArrayList<>();
+    private ItemClickListener listener;
 
     private static DiffUtil.ItemCallback<Episode> DIFF = new DiffUtil.ItemCallback<Episode>() {
         @Override
@@ -33,8 +33,12 @@ public class EpisodeAdapter extends ListAdapter<Episode, RecyclerView.ViewHolder
         }
     };
 
-    protected EpisodeAdapter() {
+    EpisodeAdapter() {
         super(DIFF);
+    }
+
+    void setEpisodeClickListener(ItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class EpisodeAdapter extends ListAdapter<Episode, RecyclerView.ViewHolder
         return episodes.size();
     }
 
-    public void setData(List<Episode> newEpisodeList) {
+    void setData(List<Episode> newEpisodeList) {
         this.episodes.clear();
         this.episodes.addAll(newEpisodeList);
         notifyDataSetChanged();
@@ -61,11 +65,12 @@ public class EpisodeAdapter extends ListAdapter<Episode, RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((EpisodeViewHolder)holder).bindTo(position);
+        ((EpisodeViewHolder) holder).bindTo(position);
     }
 
     private class EpisodeViewHolder extends RecyclerView.ViewHolder {
         Episode episode;
+
         EpisodeViewHolder(@NonNull View itemView) {
             super(itemView);
         }
@@ -73,11 +78,12 @@ public class EpisodeAdapter extends ListAdapter<Episode, RecyclerView.ViewHolder
         void bindTo(int position) {
             episode = episodes.get(position);
 
-            ((TextView)itemView.findViewById(R.id.episode_name)).setText(episode.getName());
+            ((TextView) itemView.findViewById(R.id.episode_name)).setText(episode.getName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    displayEpisodeInfo();
+                    if (listener != null)
+                        listener.onEpisodeClick(episode);
                 }
             });
         }
